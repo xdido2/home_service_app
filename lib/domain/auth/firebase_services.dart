@@ -30,6 +30,4 @@ class FirebaseAuthServices {
     }
     return null;
   }
-
-
 }

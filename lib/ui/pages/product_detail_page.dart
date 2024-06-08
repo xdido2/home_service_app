@@ -637,8 +637,6 @@ class _PopUpModalState extends State<PopUpModal> {
         return;
       }
 
-      print('here');
-
       model.addBooking(
         context,
         DateFormat('dd MMM').format(chooseDate!),

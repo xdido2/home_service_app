@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:home_service_app/ui/data/get_categories.dart';
 import 'package:home_service_app/ui/pages/category/categories_page.dart';
@@ -16,15 +14,15 @@ class CategoryItemList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CategoriesAppBar(),
-      body: CategoryItemListBody(new_index: index),
+      body: CategoryItemListBody(newIndex: index),
     );
   }
 }
 
 class CategoryItemListBody extends StatelessWidget {
-  final int new_index;
+  final int newIndex;
 
-  const CategoryItemListBody({super.key, required this.new_index});
+  const CategoryItemListBody({super.key, required this.newIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +47,7 @@ class CategoryItemListBody extends StatelessWidget {
                 width: 10,
               ),
               Text(
-                category[new_index]['title'],
+                category[newIndex]['title'],
                 style: AppTextStyle.serviceRowTitleTextStyle,
               ),
             ],
@@ -66,12 +64,12 @@ class CategoryItemListBody extends StatelessWidget {
                   onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ServiceDetailPage(categoryId: new_index,
+                          builder: (context) => ServiceDetailPage(categoryId: newIndex,
                             index: index,),
                         ),
                       ),
                   child: CategoryItem(
-                    category: category[new_index]['title'],
+                    category: category[newIndex]['title'],
                     index: index,
                   ),),
               itemCount: 10,
