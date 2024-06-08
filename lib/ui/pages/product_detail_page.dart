@@ -606,6 +606,8 @@ class _PopUpModalState extends State<PopUpModal> {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<BookingsProvider>(context);
+    List category = AppCategories.data.values.toList();
+
 
     Future<void> selectDate() async {
       DateTime? date = await showDatePicker(
@@ -622,7 +624,7 @@ class _PopUpModalState extends State<PopUpModal> {
 
     Future<void> selectTime() async {
       TimeOfDay? time =
-      await showTimePicker(context: context, initialTime: TimeOfDay.now());
+          await showTimePicker(context: context, initialTime: TimeOfDay.now());
       if (time != null) {
         setState(() {
           chooseTime = time;
@@ -635,7 +637,8 @@ class _PopUpModalState extends State<PopUpModal> {
         return;
       }
 
-      List category = AppCategories.data.values.toList();
+      print('here');
+
       model.addBooking(
         context,
         DateFormat('dd MMM').format(chooseDate!),
@@ -643,13 +646,19 @@ class _PopUpModalState extends State<PopUpModal> {
         widget.categoryId,
         chooseTime!.format(context),
       );
+
+
+
       Navigator.pop(context);
 
       showDialog(
         context: context,
         builder: (context) => const AlertDialog(
           backgroundColor: Colors.green,
-          title: Text('Success!', style: TextStyle(color: AppColors.primaryTextColor, fontSize: 18),),
+          title: Text(
+            'Success!',
+            style: TextStyle(color: AppColors.primaryTextColor, fontSize: 18),
+          ),
         ),
       );
     }
@@ -705,7 +714,9 @@ class _PopUpModalState extends State<PopUpModal> {
             AppColors.productDetailPopUpModalChooseBtn1Color,
             'assets/images/icons/app_icons/calendar_icon2.png',
             selectDate,
-            chooseDate != null ? DateFormat('dd MMM').format(chooseDate!) : 'Select your Date',
+            chooseDate != null
+                ? DateFormat('dd MMM').format(chooseDate!)
+                : 'Select your Date',
           ),
           popUpModalBtn(
             context,
@@ -713,7 +724,9 @@ class _PopUpModalState extends State<PopUpModal> {
             AppColors.productDetailPopUpModalChooseBtn2Color,
             'assets/images/icons/app_icons/clock_icon.png',
             selectTime,
-            chooseTime != null ? chooseTime!.format(context) : 'Select your Time',
+            chooseTime != null
+                ? chooseTime!.format(context)
+                : 'Select your Time',
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

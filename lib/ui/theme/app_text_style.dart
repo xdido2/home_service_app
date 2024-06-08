@@ -167,5 +167,15 @@ abstract final class AppTextStyle {
     fontWeight: FontWeight.w600,
     color: AppColors.primaryTextColor,
     fontFamily: 'Inter',
+  );static TextStyle authSignTitleTextStyle = const TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w700,
+    color: AppColors.secondaryTextColor,
+    fontFamily: 'Inter',
+  );static TextStyle authOtherWayBtnTitleTextStyle = const TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: AppColors.secondaryTextColor,
+    fontFamily: 'Inter',
   );
 }

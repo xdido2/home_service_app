@@ -3,7 +3,11 @@ import 'package:home_service_app/ui/theme/app_color.dart';
 import 'package:home_service_app/ui/theme/app_text_style.dart';
 
 class AuthInputPhoneNumber extends StatefulWidget {
-  const AuthInputPhoneNumber({super.key});
+  final String type;
+  final String title;
+
+  const AuthInputPhoneNumber(
+      {super.key, required this.type, required this.title});
 
   @override
   State<AuthInputPhoneNumber> createState() => _AuthInputState();
@@ -13,17 +17,20 @@ class _AuthInputState extends State<AuthInputPhoneNumber> {
   String _selectedCountryCode = '+998';
   final List<Map<String, String>> _countryCodes = [
     {
-      'code': 'RU',
-      'dial_code': '+7',
-      'flag': 'assets/images/flags/russia.png',
-    },
-    {
-      'code': 'UZ',
+      'code': 'UZB',
       'dial_code': '+998',
       'flag': 'assets/images/flags/uzbekistan.png'
     },
+    {
+      'code': 'RU',
+      'dial_code': '+7',
+      'flag': 'assets/images/flags/russia.png'
+    },
     // Add more countries as needed
   ];
+
+  String _selectedGender = 'Mr.';
+  final List<String> _genders = ['Mr.', 'Ms.', 'Mrs.', 'Other'];
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +38,12 @@ class _AuthInputState extends State<AuthInputPhoneNumber> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Phone Number',
-          style: AppTextStyle.authInputTitleTextStyle,
+          widget.title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         Container(
@@ -40,14 +51,11 @@ class _AuthInputState extends State<AuthInputPhoneNumber> {
             color: AppColors.secondaryColor,
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.only(right: 12, left: 12),
           child: Row(
             children: [
-              Theme(
-                data: Theme.of(context).copyWith(
-                  canvasColor: AppColors.secondaryColor,
-                ),
-                child: DropdownButtonHideUnderline(
+              if (widget.type == 'phone')
+                DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     value: _selectedCountryCode,
                     items: _countryCodes.map((country) {
@@ -55,22 +63,14 @@ class _AuthInputState extends State<AuthInputPhoneNumber> {
                         value: country['dial_code'],
                         child: Row(
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(200),
-                              child: Image.asset(
-                                country['flag']!,
-                                width: 24,
-                                height: 24,
-                              ),
+                            Image.asset(
+                              country['flag']!,
+                              width: 24,
+                              height: 24,
                             ),
                             const SizedBox(width: 8),
-                            Text(
-                              country['dial_code']!,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600),
-                            ),
+                            Text(country['dial_code']!,
+                                style: AppTextStyle.authInputTitleTextStyle),
                           ],
                         ),
                       );
@@ -80,9 +80,37 @@ class _AuthInputState extends State<AuthInputPhoneNumber> {
                         _selectedCountryCode = value!;
                       });
                     },
+                    dropdownColor: AppColors.secondaryColor,
+                    icon:
+                        const Icon(Icons.arrow_drop_down, color: Colors.white),
+                    style: AppTextStyle.authInputTitleTextStyle,
                   ),
                 ),
-              ),
+              if (widget.type == 'gender')
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _selectedGender,
+                    items: _genders.map((gender) {
+                      return DropdownMenuItem<String>(
+                        value: gender,
+                        child: Text(
+                          gender,
+                          style: AppTextStyle.authInputTitleTextStyle
+                              .copyWith(fontSize: 14),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedGender = value!;
+                      });
+                    },
+                    dropdownColor: AppColors.secondaryColor,
+                    icon:
+                        const Icon(Icons.arrow_drop_down, color: Colors.white),
+                    style: AppTextStyle.authInputTitleTextStyle,
+                  ),
+                ),
               const VerticalDivider(
                 color: Colors.white,
                 thickness: 1,
@@ -91,19 +119,16 @@ class _AuthInputState extends State<AuthInputPhoneNumber> {
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.all(12),
+                    hintText:
+                        widget.type == 'phone' ? 'Phone Number' : 'First Name',
+                    hintStyle: AppTextStyle.authInputTitleTextStyle
+                        .copyWith(color: AppColors.authHintTextColor),
                     border: InputBorder.none,
-                    hintText: 'Phone Number',
-                    hintStyle: AppTextStyle.authInputTitleTextStyle.copyWith(
-                      fontSize: 14,
-                      color: AppColors.hintTextColor,
-                    ),
                   ),
-                  keyboardType: TextInputType.phone,
-                  style: AppTextStyle.authInputTitleTextStyle.copyWith(
-                    fontSize: 14,
-                    color: AppColors.authHintTextColor,
-                  ),
+                  keyboardType: widget.type == 'phone'
+                      ? TextInputType.phone
+                      : TextInputType.text,
+                  style: AppTextStyle.authInputTitleTextStyle,
                 ),
               ),
             ],
@@ -115,34 +140,74 @@ class _AuthInputState extends State<AuthInputPhoneNumber> {
 }
 
 class AuthInputEmailPassword extends StatelessWidget {
-  const AuthInputEmailPassword({super.key});
+  final String title;
+  final String type;
+
+  const AuthInputEmailPassword(
+      {super.key, required this.title, required this.type});
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Phone Number',
+          title,
           style: AppTextStyle.authInputTitleTextStyle,
         ),
         const SizedBox(height: 8),
         TextField(
           decoration: InputDecoration(
+            filled: true,
+            fillColor: AppColors.secondaryColor,
             contentPadding: const EdgeInsets.all(12),
-            border: InputBorder.none,
-            hintText: 'Phone Number',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            hintText: title,
             hintStyle: AppTextStyle.authInputTitleTextStyle.copyWith(
               fontSize: 14,
               color: AppColors.hintTextColor,
             ),
           ),
-          keyboardType: TextInputType.phone,
+          keyboardType: type == 'other'
+              ? title == 'Email'
+                  ? TextInputType.emailAddress
+                  : TextInputType.visiblePassword
+              : TextInputType.text,
           style: AppTextStyle.authInputTitleTextStyle.copyWith(
             fontSize: 14,
             color: AppColors.authHintTextColor,
           ),
         ),
       ],
+    );
+  }
+}
+
+class SignButton extends StatelessWidget {
+  final String title;
+
+  const SignButton({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {},
+      style: ButtonStyle(
+        backgroundColor: const WidgetStatePropertyAll(AppColors.authBtnColor),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        minimumSize: const WidgetStatePropertyAll(Size(double.infinity, 48)),
+      ),
+      child: Text(
+        title,
+        style: AppTextStyle.authSignTitleTextStyle,
+      ),
     );
   }
 }

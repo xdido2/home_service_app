@@ -16,7 +16,6 @@ class _BookingsPageViewState extends State<BookingsPageView> {
   void _handleButtonPress(int index) {
     setState(() {
       selectedIndex = index;
-      print(selectedIndex);
     });
   }
 

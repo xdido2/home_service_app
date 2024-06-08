@@ -34,6 +34,7 @@ abstract final class AppColors {
   static const Color ratingColor = Color.fromRGBO(251, 148, 80, 1);
 
   static const Color authHintTextColor = Color.fromRGBO(83, 87, 99, 1);
+  static const Color authBtnColor = Color.fromRGBO(47, 54, 67, 1);
 
 
   static const Color productDetailBtnBorderColor = Color.fromRGBO(83, 87, 99, 1);

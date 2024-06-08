@@ -1,7 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/adapters.dart';
-import 'package:home_service_app/domain/hive/hive_box.dart';
-import 'package:home_service_app/domain/model/bookings_model.dart';
 import 'package:home_service_app/ui/data/get_categories.dart';
 import 'package:home_service_app/ui/router/app_routes.dart';
 import 'package:home_service_app/ui/theme/app_color.dart';
@@ -12,35 +12,49 @@ class UpcomingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HiveBox.bookings.isNotEmpty
-        ? ValueListenableBuilder(
-            valueListenable: HiveBox.bookings.listenable(),
-            builder: (BuildContext context, Box<BookingsModel> bookings, _) {
-              final List<BookingsModel> allBookings = bookings.values.toList();
-              return Expanded(
-                child: ListView.separated(
-                  itemBuilder: (context, index) => UpcomingItem(
-                    categoryId: allBookings[index].categoryId,
-                    model: allBookings[index],
-                  ),
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 10,
-                  ),
-                  itemCount: allBookings.length,
-                ),
-              );
-            },
-          )
-        : const UpcomingEmpty();
+    FirebaseDatabase database = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL:
+          'https://home-service-app-5b988-default-rtdb.asia-southeast1.firebasedatabase.app/',
+    );
+    DatabaseReference ref = database.ref('Bookings');
+    return Expanded(
+      child: FirebaseAnimatedList(
+        reverse: true,
+        query: ref,
+        itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                Animation<double> animation, int index) =>
+            Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10.0),
+          child: SizeTransition(
+            sizeFactor: animation,
+            child: UpcomingItem(
+              categoryId:
+                  int.parse(snapshot.child('categoryId').value.toString()),
+              title: snapshot.child('title').value.toString(),
+              time: snapshot.child('time').value.toString(),
+              date: snapshot.child('date').value.toString(),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
 class UpcomingItem extends StatelessWidget {
   final int categoryId;
-  final BookingsModel model;
+  final String title;
+  final String time;
+  final String date;
 
-  const UpcomingItem(
-      {super.key, required this.categoryId, required this.model});
+  const UpcomingItem({
+    super.key,
+    required this.categoryId,
+    required this.title,
+    required this.time,
+    required this.date,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +91,7 @@ class UpcomingItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    model.title,
+                    title,
                     style: AppTextStyle.bookingsListTitleTextStyle,
                   ),
                   Text(
@@ -130,8 +144,8 @@ class UpcomingItem extends StatelessWidget {
           ),
           UpcomingDetail(
             path: 'assets/images/icons/app_icons/calendar_icon2.png',
-            time: model.time,
-            date: model.date,
+            time: time,
+            date: date,
             isCompany: false,
           ),
           const SizedBox(
@@ -139,8 +153,8 @@ class UpcomingItem extends StatelessWidget {
           ),
           UpcomingDetail(
             path: 'assets/images/icons/app_icons/company_icon.png',
-            time: model.time,
-            date: model.date,
+            time: time,
+            date: date,
             isCompany: true,
           ),
         ],
@@ -279,16 +293,17 @@ class UpcomingEmpty extends StatelessWidget {
               ),
             ),
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, AppRoutes.categories),
+              onPressed: () =>
+                  Navigator.pushNamed(context, AppRoutes.categories),
               style: ButtonStyle(
-                minimumSize: const WidgetStatePropertyAll(Size(166, 48)),
-                shape: WidgetStatePropertyAll(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                  minimumSize: const WidgetStatePropertyAll(Size(166, 48)),
+                  shape: WidgetStatePropertyAll(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                ),
-                backgroundColor: const  WidgetStatePropertyAll(AppColors.thirdColor)
-              ),
+                  backgroundColor:
+                      const WidgetStatePropertyAll(AppColors.thirdColor)),
               child: Text(
                 'View all services',
                 style: AppTextStyle.bookingsEmptyListTextStyle.copyWith(
