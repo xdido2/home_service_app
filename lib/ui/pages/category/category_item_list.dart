@@ -61,17 +61,20 @@ class CategoryItemListBody extends StatelessWidget {
                 color: AppColors.dividerColor,
               ),
               itemBuilder: (context, index) => InkWell(
-                  onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ServiceDetailPage(categoryId: newIndex,
-                            index: index,),
-                        ),
-                      ),
-                  child: CategoryItem(
-                    category: category[newIndex]['title'],
-                    index: index,
-                  ),),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ServiceDetailPage(
+                      categoryId: newIndex,
+                      index: index,
+                    ),
+                  ),
+                ),
+                child: CategoryItem(
+                  category: category[newIndex]['title'],
+                  index: index,
+                ),
+              ),
               itemCount: 10,
             ),
           ),
@@ -90,6 +93,9 @@ class CategoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+      mainAxisSize: MainAxisSize.max,
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(8),
@@ -105,12 +111,14 @@ class CategoryItem extends StatelessWidget {
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,
           children: [
             Row(
+              mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
+                  mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Image(
@@ -130,6 +138,7 @@ class CategoryItem extends StatelessWidget {
                     ),
                   ],
                 ),
+
                 InkWell(
                     onTap: () {},
                     child: const Icon(Icons.more_horiz,

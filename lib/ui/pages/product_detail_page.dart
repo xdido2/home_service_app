@@ -1,13 +1,13 @@
 import 'dart:ui';
 
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:home_service_app/domain/provider/bookings_provider.dart';
 import 'package:home_service_app/ui/data/get_categories.dart';
 import 'package:home_service_app/ui/theme/app_color.dart';
 import 'package:home_service_app/ui/theme/app_text_style.dart';
-import 'package:home_service_app/ui/widget/product_detail/pop_up_modal.dart';
 import 'package:home_service_app/ui/widget/product_detail/button.dart';
+import 'package:home_service_app/ui/widget/product_detail/pop_up_modal.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -151,7 +151,7 @@ class TypeofProperty extends StatefulWidget {
 }
 
 class _TypeofPropertyState extends State<TypeofProperty> {
-  int selectedIndex = -1; // Initially, no button is selected
+  int selectedIndex = -1;
 
   void _handleButtonPress(int index) {
     setState(() {
@@ -608,7 +608,6 @@ class _PopUpModalState extends State<PopUpModal> {
     final model = Provider.of<BookingsProvider>(context);
     List category = AppCategories.data.values.toList();
 
-
     Future<void> selectDate() async {
       DateTime? date = await showDatePicker(
         context: context,
@@ -644,8 +643,6 @@ class _PopUpModalState extends State<PopUpModal> {
         widget.categoryId,
         chooseTime!.format(context),
       );
-
-
 
       Navigator.pop(context);
 
